@@ -1,0 +1,16 @@
+services:
+  database:
+    build:
+      context: ./src/db
+      dockerfile: Dockerfile
+    ports:
+      - 3306:3306
+    # volumes:
+    #   - db-volume:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+
+
+volumes:
+  db-volume:
