@@ -59,21 +59,6 @@ class DbWrapper:
             return None
         return Token(**token_row)
 
-    @classmethod
-    def get_user_by_token(cls, token: Token) -> User:
-        return cls.get_user_by_id(token.user_id)
-
-
-    @staticmethod
-    def get_user_by_id(id: int) -> User | None:
-        cur = db.cursor(dictionary=True)
-        cur.execute("SELECT * FROM users WHERE id = %s", (id,))
-
-        user_data = cur.fetchone()
-        if user_data is None:
-            return None
-        return User.model_validate(user_data)
-
 
     @classmethod
     def create_new_cookies(cls, user: User) -> str:
@@ -92,6 +77,30 @@ class DbWrapper:
 
 
     @staticmethod
+    def _password_match(plain_password: str, hashed_password: str) -> bool:
+        return plain_password == hashed_password
+
+
+    @classmethod
+    def verify_credential(cls, cred: UserCredential) -> User | None:
+        user = cls.get_user_by_username(cred.user)
+        if user is None or not cls._password_match(cred.password, user.password):
+            return None
+        return user
+
+
+    @staticmethod
+    def get_user_by_id(id: int) -> User | None:
+        cur = db.cursor(dictionary=True)
+        cur.execute("SELECT * FROM users WHERE id = %s", (id,))
+
+        user_data = cur.fetchone()
+        if user_data is None:
+            return None
+        return User.model_validate(user_data)
+
+
+    @staticmethod
     def get_user_by_username(username: str) -> User | None:
         cur = db.cursor(dictionary=True)
         cur.execute("SELECT * FROM users WHERE user = %s", (username,))
@@ -100,13 +109,19 @@ class DbWrapper:
             return None
         return User.model_validate(user_data)
 
-    @staticmethod
-    def _password_match(plain_password: str, hashed_password: str) -> bool:
-        return plain_password == hashed_password
 
     @classmethod
-    def verify_credential(cls, cred: UserCredential) -> User | None:
-        user = cls.get_user_by_username(cred.user)
-        if user is None or not cls._password_match(cred.password, user.password):
+    def get_user_by_token(cls, token: str) -> User | None:
+        cur = db.cursor(dictionary=True)
+        cur.execute(
+            """
+            SELECT u.id, u.user, u.is_admin, u.password FROM cookies
+            JOIN users u ON u.id = cookies.user_id
+            WHERE cookies.token = %s AND cookies.expires_at > NOW();
+            """,
+            (token,)
+        )
+        user_data = cur.fetchone()
+        if user_data is None:
             return None
-        return user
+        return User.model_validate(user_data)
