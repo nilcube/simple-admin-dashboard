@@ -4,11 +4,19 @@ USE app;
 
 
 CREATE TABLE users(
-    _id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     user VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(300) NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE
 );
 
 
-insert into users(user, password) VALUES ("root", "default");
+CREATE TABLE cookies(
+    user_id INT NOT NULL,
+    token VARCHAR(150) NOT NULL UNIQUE,
+    expires_at DATETIME NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+INSERT INTO users(user, password, is_admin) VALUES ("root", "default", TRUE);
