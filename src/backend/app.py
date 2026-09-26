@@ -2,6 +2,7 @@ from typing import Annotated
 from db import DbWrapper
 from models import UserCredential, User
 from fastapi import FastAPI, HTTPException, status, responses, Response, Cookie
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -25,6 +26,7 @@ def verify_token(token: str | None) -> User:
 def home():
     return "Home Page"
 
+
 @app.post("/login")
 def login(credentials: UserCredential, response: Response):
     user = DbWrapper.verify_credential(credentials)
@@ -43,5 +45,4 @@ def add_user(session_id: Annotated[str | None, Cookie()] = None):
     user_details.pop("password", "")
     return user_details
 
-if __name__ == "__main__":
-    pass
+app.mount("/static", StaticFiles(directory="static"))
