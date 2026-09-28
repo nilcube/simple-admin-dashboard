@@ -1,0 +1,23 @@
+#toast {
+    position: absolute;
+    bottom: 30px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.bread {
+    width: 400px;
+    height: 80px;
+    color: white;
+    background-color: var(--highlight-background);
+    display: flex;
+    align-items: center;
+    border-left: 4px solid var(--highlight-color);
+    margin:10px;
+    border-radius: 5px;
+}
+
+.bread * {
+    margin: 10px;
+}

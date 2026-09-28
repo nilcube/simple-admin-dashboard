@@ -1,0 +1,32 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <link rel="stylesheet" href="/static/toast.css" />
+        <script src="/static/toast.js"></script>
+        <title>Login Page</title>
+    </head>
+    <body>
+        <div class="centered-box">
+            <div class="input-holder">
+                <p>login</p>
+                <div>
+                    <input type="text" placeholder="user" id="username-input" />
+                    <p class="error-msg"></p>
+                </div>
+                <div>
+                    <input
+                        type="password"
+                        placeholder="password"
+                        id="password-input"
+                    />
+                    <p class="error-msg"></p>
+                </div>
+                <button>Login</button>
+            </div>
+        </div>
+        <div id="toast"></div>
+        <script src="/static/login.js"></script>
+    </body>
+</html>
