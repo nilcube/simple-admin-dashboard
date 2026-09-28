@@ -24,7 +24,7 @@ class Token:
     user_id: int
 
 
-class Note:
+class Note(BaseModel):
     id: int = 0
     title: str = Field(min_length=1)
     body: str = Field(max_length=5000, default="")
