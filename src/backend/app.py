@@ -21,6 +21,14 @@ def verify_token(token: str | None) -> User:
         )
     return user
 
+def verify_admin(token: str|None) -> User:
+    user = verify_token(token)
+    if not user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You're not an admin"
+        )
+
 
 @app.get("/", response_class=responses.HTMLResponse)
 def home():
@@ -44,5 +52,31 @@ def add_user(session_id: Annotated[str | None, Cookie()] = None):
     user_details = verify_token(session_id).model_dump()
     user_details.pop("password", "")
     return user_details
+
+
+@app.get("/list-users")
+def list_all_users(session_id: Annotated[str | None, Cookie()] = None):
+    verify_admin(session_id)
+    return DbWrapper.get_all_users()
+
+
+@app.post("/create-user")
+def create_user(
+    user: User,
+    session_id: Annotated[str | None, Cookie()] = None,
+):
+    verify_admin(session_id)
+    if not DbWrapper.add_user(user):
+        raise HTTPException(
+            status_code=409,
+            detail="Username is already at use"
+        )
+    return responses.JSONResponse(
+        status_code=status.HTTP_201_CREATED,
+        content={"message": "User is created"}
+    )
+
+
+
 
 app.mount("/static", StaticFiles(directory="static"))

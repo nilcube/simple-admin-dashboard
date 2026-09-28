@@ -1,3 +1,5 @@
+from typing import Any
+
 import mysql.connector
 from random import choices as rand_choices
 from string import printable as str_printable
@@ -27,15 +29,12 @@ class DbWrapper:
         return bool(cur.fetchone())
 
 
-    @staticmethod
-    def add_user(user: User) -> bool:
+    @classmethod
+    def add_user(cls, user: User) -> bool:
         cur = db.cursor()
-        try:
-            cur.execute("INSERT INTO users(user, password) VALUES (%s, %s)", (user.user, user.password))
-        except mysql.connector.IntegrityError as e:
-            if e.errno == errorcode.ER_DUP_ENTRY:
-                return False
-            raise e
+        if cls.get_user_by_username(user.user):
+            return False
+        cur.execute("INSERT INTO users(user, password, is_admin) VALUES (%s, %s, %s)", (user.user, user.password, user.is_admin))
         db.commit()
         return True
 
@@ -125,3 +124,14 @@ class DbWrapper:
         if user_data is None:
             return None
         return User.model_validate(user_data)
+
+
+    @staticmethod
+    def get_all_users() -> dict[str, Any]:
+        cur = db.cursor(dictionary=True)
+        cur.execute(
+            """
+            SELECT id, user, is_admin FROM users
+            """
+        )
+        return cur.fetchall()
