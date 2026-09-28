@@ -4,7 +4,7 @@ import mysql.connector
 from random import choices as rand_choices
 from string import printable as str_printable
 from mysql.connector import errorcode
-from models import Token, User, UserCredential
+from models import Note, Token, User, UserCredential
 
 HOST = "localhost"
 USER = "root"
@@ -135,3 +135,13 @@ class DbWrapper:
             """
         )
         return cur.fetchall()
+
+    @staticmethod
+    def new_note(note: Note, creator_id: int) -> None:
+        cur = db.cursor()
+        cur.execute(
+            """
+            INSERT INTO notes(note, title, creator_id) VALUES(%s, %s, %s)
+            """,
+            (note.body, note.title, creator_id)
+        )

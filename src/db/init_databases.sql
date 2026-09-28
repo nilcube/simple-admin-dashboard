@@ -19,4 +19,15 @@ CREATE TABLE cookies(
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TABLE notes(
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    note TEXT NOT NULL DEFAULT (""),
+    title TEXT NOT NULL,
+    creator_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (creator_id) REFERENCES users(id)
+
+);
+
 INSERT INTO users(user, password, is_admin) VALUES ("root", "default", TRUE);

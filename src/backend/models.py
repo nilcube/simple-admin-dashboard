@@ -22,3 +22,9 @@ class Token:
     expired: bool
     token: str
     user_id: int
+
+
+class Note:
+    id: int = 0
+    title: str = Field(min_length=1)
+    body: str = Field(max_length=5000, default="")

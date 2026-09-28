@@ -1,6 +1,6 @@
 from typing import Annotated
 from db import DbWrapper
-from models import UserCredential, User
+from models import Note, UserCredential, User
 from fastapi import FastAPI, HTTPException, status, responses, Response, Cookie
 from fastapi.staticfiles import StaticFiles
 
@@ -75,6 +75,16 @@ def create_user(
         status_code=status.HTTP_201_CREATED,
         content={"message": "User is created"}
     )
+
+@app.post("/note")
+def new_note(
+    note: Note,
+    session_id: Annotated[str | None, Cookie()] = None
+):
+    user = verify_token(session_id)
+    DbWrapper.new_note(note, user.id)
+
+
 
 
 
