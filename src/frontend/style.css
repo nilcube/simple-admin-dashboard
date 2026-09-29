@@ -22,7 +22,7 @@ input {
     padding-left: 17px;
 }
 
-input.invalid{
+input.invalid {
     border: 1px solid red;
     background-color: darkred;
 }
@@ -32,9 +32,8 @@ button {
     border-width: 0;
 }
 
-button:hover{
+button:hover {
     background-color: var(--highlight-color-hover);
-
 }
 
 .input-holder {
@@ -64,9 +63,24 @@ button:hover{
     height: 100%;
 }
 
-
-.error-msg{
+.error-msg {
     color: darkred;
     font-size: 14px;
-    margin: 10px 10px;
+    margin-top: 2px;
+    padding-left: 10px;
+}
+
+#nav-bar {
+    position: absolute;
+    background-color: var(--highlight-background);
+    height: 5%;
+    width: 100%;
+    min-height: 56px;
+    top: 0;
+    right: 0;
+}
+
+#nav-bar img{
+    height: 100%;
+    object-fit: cover;
 }
