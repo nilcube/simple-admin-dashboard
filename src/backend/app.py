@@ -35,7 +35,9 @@ def verify_admin(session_id: Annotated[str | None, Cookie()] = None) -> User:
 
 @app.get("/", response_class=responses.HTMLResponse)
 def home():
-    return "Home Page"
+    return responses.FileResponse(
+        "static/home.html",
+    )
 
 
 @app.post("/login")
@@ -49,6 +51,14 @@ def login(credentials: UserCredential, response: Response):
     token = DbWrapper.create_new_cookies(user)
     response.set_cookie(key="session_id", value=token)
     return {"message":"Cookie set"}
+
+@app.get("/login")
+def login_html(session_id: Annotated[str | None, Cookie()] = None):
+    try:
+        verify_token(session_id)
+    except HTTPException:
+        return responses.FileResponse('static/login.html')
+    return responses.RedirectResponse("/")
 
 @app.get("/me")
 def add_user(user = Depends(verify_token)):

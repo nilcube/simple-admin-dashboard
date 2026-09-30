@@ -1,0 +1,21 @@
+#welcome-section {
+    color:white;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    min-width:50%;
+    font-size: 24px;
+    padding: 30px;
+}
+
+#welcome-section p{
+    margin-left: 23px;
+}
+
+#welcome-section h1{
+      margin-bottom: 13px;
+}
+
+#welcome-section a{
+    color: var(--highlight-color);
+}

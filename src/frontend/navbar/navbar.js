@@ -1,7 +1,23 @@
-async function profile() {}
+async function profile() {
+  const resp = await fetch("/me");
+
+  const aTag = document.createElement("a");
+  const img = document.createElement("img");
+
+  aTag.href = "/login";
+  aTag.classList.add("profile-icon");
+  img.src = "/static/empty-user-profile.svg"
 
 
-async function addLogo(){
+
+  if (resp.ok){
+  }
+  aTag.appendChild(img);
+  return aTag;
+}
+
+
+function addLogo(){
   const aTag = document.createElement("a");
   aTag.href = "/";
 
@@ -18,7 +34,9 @@ async function createNavbar(show_profile = true) {
 
   document.body.insertAdjacentElement("afterbegin", nvBar);
 
-  nvBar.append(await addLogo());
+  nvBar.appendChild(addLogo());
+  if (show_profile)
+    nvBar.appendChild(await profile());
 
   return nvBar;
 }
